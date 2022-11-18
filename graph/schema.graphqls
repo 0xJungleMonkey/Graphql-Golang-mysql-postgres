@@ -1,0 +1,150 @@
+# GraphQL schema example
+# https://gqlgen.com/getting-started/
+# build-in directive by Gqlgen
+directive @goField(forceResolver: Boolean, name: String) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+# build-in scalar
+scalar Time
+
+type Address {
+    id: ID!
+    address_type: String!
+    status: String!
+    entity: String!
+    number_and_street: String!
+    suite_or_apartment: String!
+    city: String!
+    postal_code: String!
+    country: String!
+    notes: String!
+    
+}
+type Building {
+  customer_id: Int!
+  address_id: Int!
+  address: Address!  
+  customer: Customer!
+  id: ID!
+  interventions: [FactIntervention!]!
+  FullNameOfBuildingAdmin: Int!
+  EmailOfAdminOfBuilding: String!
+  PhoneNumOfBuildingAdmin: String!
+  FullNameOfTechContactForBuilding: String!
+  TechContactEmailForBuilding: String!
+  TechContactPhoneForBuilding: String!
+  building_details: BuildingDetails!
+}
+scalar DateTime
+scalar Json
+# type FactIntervention struct {
+#   gorm.Model
+#   employee_id: uint
+#     building_id: uint
+#     # Building: Building!
+#     battery_id: uint
+#     column_id: uint
+#     elevator_id: uint
+#     start_datetime: datetime
+#     end_datetime: datetime
+#     result: string
+#     report: string
+#     status: string
+# }
+type FactIntervention {
+    id: ID!
+    employee_id: Int!
+    building_id: Int!
+    battery_id: Int!
+    column_id: Int!
+    elevator_id: Int!
+    start_datetime: DateTime!
+    end_datetime: DateTime!
+    result: String!
+    report: String!
+    status: String! 
+    building: Building
+}
+type BuildingFactIntervention {
+  employee_id: Int!
+  building: Building!
+  factIntervention: FactIntervention!
+}
+
+type Query {      
+  addresses: [Address!]!
+  buildings: [Building!]  
+  facts: [FactIntervention!]  
+  fact(building_id: Int!): FactIntervention  
+  building(id: Int!): Building
+  GetAddressofInterventionByInterventionId(id: Int!): BuildingFactIntervention
+  GetCustomerInfoandBuildingDetailsByBuildingId(id: Int!): BuildingCustomerFactIntervention
+  GetBuildingandDetailsByEmployeeId(id: Int!): EmployeeBuildingandDetails
+  RadGetBuildingandDetailsByEmployeeId(id: Int!): radEmployeeBuildingandDetails
+  q3(employee_id: Int!): EmployeeBuildingandDetails
+  }
+
+type Customer {
+	address_id: Int!
+	user_id: Int!
+	id: ID!
+	CustomerCreationDate: String!
+	CompanyName: String!
+	CompanyHQAdress: String!
+	FullNameOfCompanyContact: String!
+	CompanyContactPhone: String!
+	CompanyContactEMail: String!
+	CompanyDesc: String!
+	FullNameServiceTechAuth: String!
+	TechAuthPhoneService: String!
+	TechManagerEmailService: String!
+}
+
+type Employee {
+  user_id: Int!
+  id: ID!
+  first_name: String!
+  last_name: String!
+  title: String!
+  email: String!
+  factInterventions: [FactIntervention!]
+  # factInterventionsList: [BuildingFactIntervention!]
+}
+
+type BuildingDetails {
+  building_id: Int!
+  id: ID!
+  InformationKey: String!
+  Value: String!
+}
+
+type BuildingCustomerFactIntervention {
+  building: Building!
+  interventionhistory: [FactIntervention!]
+  # customer: Customer!
+}
+
+type radEmployee {
+  user_id: Int!
+  id: ID!
+  first_name: String!
+  last_name: String!
+  title: String!
+  email: String!
+  # factInterventions: [FactIntervention!]
+  # factInterventionsList: [BuildingFactIntervention!]
+}
+
+type radEmployeeBuildingandDetails {
+  employee: Employee!
+  interventions: [FactIntervention]
+}
+
+type EmployeeBuildingandDetails {
+  employee: Employee!
+  interventions_list: [BuildingFactIntervention!]
+  interventions: [FactIntervention!]
+  buildings: [Building!]
+}
+# type BuildingFactIntervention {
+#   building: Building!
+#   factIntervention: FactIntervention!
+# }
